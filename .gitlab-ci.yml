@@ -7,6 +7,7 @@ variables:
 
 build:
   stage: build
+  image: maven:3.8.6-openjdk-17  # Usando uma imagem com Maven e OpenJDK 17
   script: 
     - mvn clean package -DskipTests
     - docker build -t $IMAGE_NAME

@@ -1,0 +1,20 @@
+stages:
+  - build
+  - deploy
+
+variables:
+  IMAGE_NAME: registry.gitlab.com/yuredev/street-eye-backend
+
+build:
+  state: build
+  script: 
+    - mvn clean package -DskipTests
+    - docker build -t $IMAGE_NAME
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    - docker push $IMAGE_NAME
+
+deploy:
+  stage: deploy
+  script:
+    - echo "Fazendo deploy no render..."
+    # - curl -X POST https://api.render.com/deploy/srv-XXXXXXXX?key=API_KEY

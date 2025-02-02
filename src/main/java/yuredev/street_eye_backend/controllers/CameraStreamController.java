@@ -21,13 +21,12 @@ public class CameraStreamController {
 
     @GetMapping("/video")
     public ResponseEntity<Resource> getPlaylist() throws IOException {
-        Path filePath = Paths.get(VIDEO_DIRECTORY).resolve("video.m3u8");
+        var filePath = Paths.get(VIDEO_DIRECTORY).resolve("video.m3u8");
 
         if (!Files.exists(filePath)) {
             return ResponseEntity.notFound().build();
         }
-        System.out.println("getVideo");
-        Resource resource = new UrlResource(filePath.toUri());
+        var resource = new UrlResource(filePath.toUri());
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf("application/vnd.apple.mpegurl"))
                 .body(resource);
@@ -35,13 +34,12 @@ public class CameraStreamController {
 
     @GetMapping("/{segmentName}.ts")
     public ResponseEntity<Resource> getSegment(@PathVariable String segmentName) throws IOException {
-        Path filePath = Paths.get(VIDEO_DIRECTORY).resolve(segmentName + ".ts");
+        var filePath = Paths.get(VIDEO_DIRECTORY).resolve(segmentName + ".ts");
 
         if (!Files.exists(filePath)) {
             return ResponseEntity.notFound().build();
         }
-        System.out.println("getSegment" + " " + filePath);
-        Resource resource = new UrlResource(filePath.toUri());
+        var resource = new UrlResource(filePath.toUri());
         return ResponseEntity.ok()
                 .contentType(MediaType.valueOf("video/mp2t"))
                 .body(resource);

@@ -26,6 +26,10 @@ deploy:
   services:
     - docker:24-dind
   script:
+    - echo "Testando variáveis..."
+    - echo "SPRING_DATASOURCE_URL: $SPRING_DATASOURCE_URL"
+    - echo "SPRING_DATASOURCE_USERNAME: $SPRING_DATASOURCE_USERNAME"
+    - echo "SPRING_DATASOURCE_PASSWORD: $SPRING_DATASOURCE_PASSWORD"
     - ls -lah target/  # Debug para ver se o .jar está disponível
     - docker build -t $IMAGE_NAME .
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"

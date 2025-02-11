@@ -20,6 +20,7 @@ deploy:
     - docker:19.03.12-dind
   script:
     - docker build -t $IMAGE_NAME .
+    - echo "buildou"
     - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
     - docker push $IMAGE_NAME
     - echo "Fazendo deploy no render..."

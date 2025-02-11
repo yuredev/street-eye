@@ -11,10 +11,11 @@ build:
   image: maven:3.8.3-openjdk-17
   script:
     - mvn clean package -DskipTests
-    - ls -lah target/  # Debug para ver se o .jar foi gerado
+    - ls -lah target/  # Debug para ver se o .jar foi gerado corretamente
   artifacts:
     paths:
-      - target/*.jar  # Isso garante que o .jar seja passado para o próximo estágio
+      - target/*.jar  # Isso armazena o .jar para o próximo estágio
+    expire_in: 1h  # O artefato fica disponível por 1 hora
 
 deploy:
   stage: deploy
@@ -26,4 +27,5 @@ deploy:
     - docker build -t $IMAGE_NAME .
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
     - docker push $IMAGE_NAME
-    - echo "Fazendo deploy no render..."
+    - echo "Fazendo deploy no Render..."
+    # - curl -X POST "$RENDER_DEPLOY_HOOK"

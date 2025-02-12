@@ -5,9 +5,9 @@ stages:
 variables:
   IMAGE_NAME: registry.gitlab.com/yuredev/street-eye-backend
   DOCKER_HOST: tcp://docker:2375 # Comunicação com Docker in Docker
-  SPRING_DATASOURCE_URL: "jdbc:postgresql://dpg-cufvgh2n91rc73ckc8t0-a/street_eye"
+  SPRING_DATASOURCE_URL: jdbc:postgresql://dpg-cufvgh2n91rc73ckc8t0-a/street_eye
   SPRING_DATASOURCE_USERNAME: "admin"
-  SPRING_DATASOURCE_PASSWORD: "KLDAx7w7Kd4xN2YOzLKStijBZmd54cQF"
+  SPRING_DATASOURCE_PASSWORD: KLDAx7w7Kd4xN2YOzLKStijBZmd54cQF
 
 build:
   stage: build

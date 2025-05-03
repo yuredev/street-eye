@@ -31,3 +31,9 @@ build/
 
 ### VS Code ###
 .vscode/
+
+*.mp4
+
+*.ts 
+
+*.m3u8

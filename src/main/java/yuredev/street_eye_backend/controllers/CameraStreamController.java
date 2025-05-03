@@ -21,7 +21,7 @@ public class CameraStreamController {
 
     @GetMapping("/video")
     public ResponseEntity<Resource> getPlaylist() throws IOException {
-        var filePath = Paths.get(VIDEO_DIRECTORY).resolve("video.m3u8");
+        var filePath = Paths.get(VIDEO_DIRECTORY).resolve("stream.m3u8");
 
         if (!Files.exists(filePath)) {
             return ResponseEntity.notFound().build();

@@ -17,19 +17,22 @@ import org.springframework.core.io.UrlResource;
 
 @RestController
 public class CameraStreamController {
-    private static final String VIDEO_DIRECTORY = "src/main/resources/videos/";
+    private static final String VIDEO_DIRECTORY = "static/videos/";
 
     @GetMapping("/video")
-    public ResponseEntity<Resource> getPlaylist() throws IOException {
-        var filePath = Paths.get(VIDEO_DIRECTORY).resolve("stream.m3u8");
-
-        if (!Files.exists(filePath)) {
-            return ResponseEntity.notFound().build();
+    public ResponseEntity<?> getPlaylist() throws IOException {
+        try {
+            var filePath = Paths.get(VIDEO_DIRECTORY).resolve("stream.m3u8");
+            if (!Files.exists(filePath)) {
+                return ResponseEntity.notFound().build();
+            }
+            var resource = new UrlResource(filePath.toUri());
+            return ResponseEntity.ok()
+                    .contentType(MediaType.valueOf("application/vnd.apple.mpegurl"))
+                    .body(resource);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("");
         }
-        var resource = new UrlResource(filePath.toUri());
-        return ResponseEntity.ok()
-                .contentType(MediaType.valueOf("application/vnd.apple.mpegurl"))
-                .body(resource);
     }
 
     @GetMapping("/{segmentName}.ts")

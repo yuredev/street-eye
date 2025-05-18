@@ -10,15 +10,16 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 
 @RestController
+@RequestMapping("/video")
 public class CameraStreamController {
     private static final String VIDEO_DIRECTORY = "static/videos/";
 
-    @GetMapping("/video")
+    @GetMapping()
     public ResponseEntity<?> getPlaylist() throws IOException {
         try {
             var filePath = Paths.get(VIDEO_DIRECTORY).resolve("stream.m3u8");
@@ -34,9 +35,9 @@ public class CameraStreamController {
         }
     }
 
-    @GetMapping("/{segmentName}.ts")
-    public ResponseEntity<Resource> getSegment(@PathVariable String segmentName) throws IOException {
-        var filePath = Paths.get(VIDEO_DIRECTORY).resolve(segmentName + ".ts");
+    @GetMapping("{segmentNumber}")
+    public ResponseEntity<Resource> getSegment(@PathVariable Integer segmentNumber) throws IOException {
+        var filePath = Paths.get(VIDEO_DIRECTORY).resolve("segment_" + segmentNumber + ".ts");
 
         if (!Files.exists(filePath)) {
             return ResponseEntity.notFound().build();

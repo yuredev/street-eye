@@ -1,0 +1,1 @@
+ffmpeg -re -stream_loop -1 -i 16_Doença\ até\ a\ morte.mp4 -c:v libx264 -c:a aac -f hls -hls_time 4 -hls_list_size 5 -hls_flags delete_segments -hls_segment_filename "segment_%03d.ts" stream.m3u8

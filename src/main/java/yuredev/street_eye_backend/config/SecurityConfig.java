@@ -28,6 +28,8 @@ public class SecurityConfig {
                         // qualquer pessoa pode fazer requisição pra /login
                         authorize -> authorize.requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/video").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/video/**").permitAll()
                                 // somente usuários com a Role admin pode requestar o /products
                                 // .requestMatchers(HttpMethod.POST, "/products").hasRole("ADMIN")
                                 .anyRequest().authenticated())

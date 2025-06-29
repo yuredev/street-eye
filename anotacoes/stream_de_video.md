@@ -28,7 +28,7 @@ Um streaming HLS se origina do servidor no qual (no caso de streaming sob demand
 O comando usando **FFMPEG** abaixo usa o vídeo demoninado "16\_Doença\\ até\\ a\\ morte.mp4" (Episódio de Evangelion) como fonte a ser dividida em partes do vídeo de poucos segundos **.ts** (Transport Stream)
 
 ```shell
-ffmpeg -re -stream_loop -1 -i 16_Doença\ até\ a\ morte.mp4 -c:v libx264 -c:a aac -f hls -hls_time 4 -hls_list_size 5 -hls_flags delete_segments -hls_segment_filename "segment_%03d.ts" stream.m3u8
+ffmpeg -re -stream_loop -1 -i 16_Doença\ até\ a\ morte.mp4 -c:v libx264 -c:a aac -f hls -hls_time 4 -hls_list_size 5 -hls_flags delete_segments -hls_segment_filename "%03d.ts" -hls_base_url "/video/" stream.m3u8
 ```
 
 ## Explicação por partes
@@ -51,3 +51,8 @@ ffmpeg -re -stream_loop -1 -i 16_Doença\ até\ a\ morte.mp4 -c:v libx264 -c:a a
 *   `-hls_flags delete_segments`: **deleta automaticamente** os arquivos `.ts` antigos à medida que novos segmentos são gerados (isso ajuda a economizar espaço).
 *   `-hls_segment_filename "segment_%03d.ts"`: define o **padrão de nome** dos segmentos gerados. Ex: `segment_000.ts`, `segment_001.ts`, etc.
 *   `stream.m3u8`: é o **arquivo de saída**, a playlist HLS que players usam para reproduzir os segmentos `.ts`.
+
+### Testando nosso stream
+
+Existe uma forma de testar nosso stream disponibilizado pelo site da biblioteca do HLS, lá existe um player onde só colocamos o link de nossa playlist e ele exibe o streaming
+[HLS.JS Demo](https://hlsjs.video-dev.org/)

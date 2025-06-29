@@ -35,9 +35,9 @@ public class CameraStreamController {
         }
     }
 
-    @GetMapping("{segmentNumber}")
-    public ResponseEntity<Resource> getSegment(@PathVariable Integer segmentNumber) throws IOException {
-        var filePath = Paths.get(VIDEO_DIRECTORY).resolve("segment_" + segmentNumber + ".ts");
+    @GetMapping("{nomeArquivo}")
+    public ResponseEntity<Resource> getSegment(@PathVariable String nomeArquivo) throws IOException {
+        var filePath = Paths.get(VIDEO_DIRECTORY).resolve(nomeArquivo);
 
         if (!Files.exists(filePath)) {
             return ResponseEntity.notFound().build();

@@ -43,7 +43,7 @@ public class AuthenticationController {
         }
         var encryptedPassword = new BCryptPasswordEncoder().encode(registerDTO.password());
         var user = userRepository.save(new User(registerDTO.role(), registerDTO.login(), encryptedPassword));
-        user.setPassword(null);
+        user.setSenha(null);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 

@@ -20,28 +20,28 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 @Data
 @RequiredArgsConstructor
-@Table(name = "_user")
-@Entity(name = "_user_")
+@Table(name = "_usuario")
+@Entity(name = "_usuario_")
 @EqualsAndHashCode
 // O Spring Security tem essa interface que vem com algumas propriedades comuns de usuários de aplicações
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    private UserRole role;
+    private UserRole papel;
     private String login;
-    private String password;
+    private String senha;
 
-    public User(UserRole role, String login, String password) {
-        this.role = role;
+    public User(UserRole papel, String login, String senha) {
+        this.papel = papel;
         this.login = login;
-        this.password = password;
+        this.senha = senha;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         // linkar o enum UserRole as suas equivalencias do Spring Security
-        if (this.role == UserRole.ADMIN) {
+        if (this.papel == UserRole.ADMIN) {
             return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
         }
         return List.of(new SimpleGrantedAuthority("ROLE_USER"));
@@ -50,5 +50,10 @@ public class User implements UserDetails {
     @Override
     public String getUsername() {
         return login;
+    }
+
+    @Override
+    public String getPassword() {
+        return senha;
     }
 }

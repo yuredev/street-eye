@@ -1,10 +1,10 @@
 package yuredev.street_eye_backend.models;
 
-public enum UserRole {
+public enum PapelUsuario {
     ADMIN("admin"),
     USER("user");
 
-    UserRole(String role) {
+    PapelUsuario(String role) {
         this.role = role;
     }
 

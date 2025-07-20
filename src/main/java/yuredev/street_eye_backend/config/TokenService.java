@@ -12,7 +12,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 
-import yuredev.street_eye_backend.models.User;
+import yuredev.street_eye_backend.models.Usuario;
 
 
 @Service
@@ -20,7 +20,7 @@ public class TokenService {
     @Value("${api.security.token.secret}")
     private String secret;
 
-    public String generateToken(User user) {
+    public String generateToken(Usuario user) {
         try {
             var algorithm = Algorithm.HMAC256(secret);
             // withIssuer é o emissor do token, no caso a própria aplicação

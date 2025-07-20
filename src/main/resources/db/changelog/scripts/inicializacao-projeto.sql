@@ -4,7 +4,7 @@
 
 -- DROP TABLE public."_user";
 
-CREATE TABLE _usuario (
+CREATE TABLE usuario (
 	id varchar(255) NOT NULL,
 	login varchar(255) NULL,
 	"senha" varchar(255) NULL,

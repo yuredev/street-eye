@@ -1,7 +1,7 @@
 package yuredev.street_eye_backend.models.dto;
 
-import yuredev.street_eye_backend.models.UserRole;
+import yuredev.street_eye_backend.models.PapelUsuario;
 
-public record RegisterDTO(String login, String password, UserRole role) {
+public record RegisterDTO(String login, String password, PapelUsuario role) {
     
 }

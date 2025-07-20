@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2-2
+      author: Yure
+      changes:
+        - sqlFile:
+            dbms: postgresql
+            path: db/changelog/scripts/criacao-relacao-usuario-comunidade.sql

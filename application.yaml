@@ -1,5 +1,9 @@
 spring:
+  profiles:
+    active:
+    - local
   application:
+    name: street-eye-backend
   datasource:
     url: ${SPRING_DATASOURCE_URL:URL_NAO_CARREGADA}
     username: ${SPRING_DATASOURCE_USERNAME:USERNAME_NAO_CARREGADO}

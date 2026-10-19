@@ -1,0 +1,19 @@
+#botao-redondo {
+  border-radius: 50px;
+  border-style: solid;
+  border-width: 1px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+#botao-redondo>button {
+  cursor: pointer;
+  -webkit-user-select: none;
+  /* Safari */
+  -moz-user-select: none;
+  /* Firefox */
+  -ms-user-select: none;
+  /* IE10+ */
+  user-select: none;
+  /* Standard */
+}

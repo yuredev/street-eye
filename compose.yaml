@@ -1,0 +1,28 @@
+services:
+  banco:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: yure
+      POSTGRES_PASSWORD: yure123
+      POSTGRES_DB: street_eye
+    ports:
+      - "5432:5432"
+      
+  api:
+    image: street-eye-api:local
+    build: 
+      context: ./api
+      dockerfile: Dockerfile.app
+    ports: 
+      - "3000:8080"
+
+  ffmpeg:
+    image: alpine:3.22
+    build:
+      context: ./api
+      dockerfile: Dockerfile.ffmpeg
+
+  frontend:
+    image: node:22-alpine
+
+

@@ -1,0 +1,112 @@
+/* Container geral */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f2f5fb;
+  height: 100vh;
+}
+
+/* Cartão */
+.login-card {
+  background-color: #ffffff;
+  padding: 2.5rem;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+/* Logo */
+.logo h1 {
+  font-size: 1.8rem;
+  color: #0077a3;
+  margin-bottom: 1rem;
+  font-weight: bold;
+}
+
+/* Títulos */
+.login-title {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-bottom: 0.2rem;
+  color: #1a1a1a;
+}
+
+.login-subtitle {
+  font-size: 0.9rem;
+  color: #666;
+  margin-bottom: 1.5rem;
+}
+
+/* Formulário */
+.form-group {
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  font-weight: 500;
+  font-size: 0.9rem;
+  display: block;
+  margin-bottom: 0.3rem;
+  color: #333;
+}
+
+.form-group span {
+  color: red;
+}
+
+/* Input com ícone */
+.input-wrapper {
+  display: flex;
+  align-items: center;
+  border: 1px solid #d3dbe7;
+  border-radius: 5px;
+  background-color: #f2f5fb;
+  padding: 0.5rem;
+}
+
+.input-wrapper .icon {
+  margin-right: 0.5rem;
+  font-size: 1rem;
+  color: #666;
+}
+
+.input-wrapper input {
+  border: none;
+  outline: none;
+  background: transparent;
+  flex: 1;
+  font-size: 0.95rem;
+}
+
+/* Botão */
+.btn-login {
+  background-color: #006b96;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 0.6rem;
+  width: 100%;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.btn-login:hover {
+  background-color: #005377;
+}
+
+.input-wrapper.invalid {
+  border-color: #e74c3c;
+}
+
+.error-msg {
+  color: #e74c3c;
+  font-size: 0.75rem;
+  margin-top: 0.2rem;
+}

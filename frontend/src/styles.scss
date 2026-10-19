@@ -1,0 +1,69 @@
+@use "tailwindcss" as *;
+
+/* Reset básico */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* Estrutura principal */
+html,
+body,
+app-root,
+router-outlet {
+  height: 100%;
+}
+
+body {
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Estilo para mapa (Leaflet) */
+#map,
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+}
+
+.leaflet-layer,
+.leaflet-control-zoom-in,
+.leaflet-control-zoom-out,
+.leaflet-control-attribution {
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+
+.leaflet-marker-icon.leaflet-div-icon.leaflet-zoom-animated.leaflet-interactive {
+  background: transparent;
+  border: none;
+}
+
+.leaflet-pane.leaflet-shadow-pane {
+  display: none;
+}
+
+/* Ícones personalizados */
+.l-icon-material {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  text-align: center;
+}
+
+.l-icon-material .material-icons {
+  font-size: 17px;
+}
+
+p-absolute {
+  position: absolute;
+}
+
+p-relative {
+  position: relative;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}

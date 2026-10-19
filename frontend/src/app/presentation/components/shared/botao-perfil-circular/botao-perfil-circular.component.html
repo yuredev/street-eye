@@ -1,0 +1,17 @@
+<div
+  id="botao-redondo"
+  [ngStyle]="{
+    width: largura,
+    height: altura,
+    backgroundColor: cor,
+    color: corTexto
+  }"
+>
+  <button matButton [matMenuTriggerFor]="menu">
+    {{ iniciaisNomeUsuario }}
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item>Meu Perfil</button>
+    <button mat-menu-item>Sair</button>
+  </mat-menu>
+</div>

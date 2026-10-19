@@ -1,6 +1,7 @@
 package yuredev.street_eye_backend.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Value;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,12 +18,13 @@ import org.springframework.core.io.UrlResource;
 @RestController
 @RequestMapping("/video")
 public class CameraStreamController {
-    private static final String VIDEO_DIRECTORY = "static/videos/";
+    @Value("${STREAM_OUTPUT_DIRECTORY:../stream/output}")
+    private String videoDirectory;
 
     @GetMapping()
     public ResponseEntity<?> getPlaylist() throws IOException {
         try {
-            var filePath = Paths.get(VIDEO_DIRECTORY).resolve("stream.m3u8");
+            var filePath = Paths.get(videoDirectory).resolve("stream.m3u8");
             if (!Files.exists(filePath)) {
                 return ResponseEntity.notFound().build();
             }
@@ -37,7 +39,7 @@ public class CameraStreamController {
 
     @GetMapping("{nomeArquivo}")
     public ResponseEntity<Resource> getSegment(@PathVariable String nomeArquivo) throws IOException {
-        var filePath = Paths.get(VIDEO_DIRECTORY).resolve(nomeArquivo);
+        var filePath = Paths.get(videoDirectory).resolve(nomeArquivo);
 
         if (!Files.exists(filePath)) {
             return ResponseEntity.notFound().build();

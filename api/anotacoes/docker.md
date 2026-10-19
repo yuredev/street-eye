@@ -44,7 +44,7 @@ RUN apk add --no-cache ffmpeg
 
 RUN mkdir -p /output
 
-COPY ["static/videos/video.mp4", "/input/video.mp4"]
+COPY ["input/video.mp4", "/input/video.mp4"]
 
 CMD ["ffmpeg", "-i", "/input/video.mp4", "/output/video.m3u8"]
 ```
@@ -68,7 +68,7 @@ Imagem     -> docker run   -> container
 Antes de executar os comandos, é necessário:
 
 - estar com o Docker Desktop aberto;
-- abrir o PowerShell na pasta que contém o `Dockerfile`;
+- abrir o PowerShell em `stream/`, na raiz do projeto, que contém o `Dockerfile`;
 - confirmar que os arquivos usados pelo `COPY` realmente existem.
 
 ### Comando para construir a imagem
@@ -85,7 +85,7 @@ Significado de cada parte:
 - `street-eye-stream`: nome escolhido para a imagem.
 - `.`: representa a pasta atual e define o contexto da construção.
 
-O contexto da construção é o conjunto de arquivos que o Docker pode acessar durante o `build`. Por isso, um caminho usado em `COPY`, como `static/videos/evangelion.mp4`, é procurado a partir da pasta representada pelo `.`.
+O contexto da construção é o conjunto de arquivos que o Docker pode acessar durante o `build`. Por isso, um caminho usado em `COPY`, como `input/video.mp4`, é procurado a partir da pasta representada pelo `.`.
 
 Como não foi informada uma versão depois do nome, o Docker usa automaticamente a tag `latest`:
 
@@ -137,7 +137,7 @@ Para manter o streaming executando em segundo plano:
 docker run -d `
   --name street-eye-stream `
   --restart unless-stopped `
-  --mount "type=bind,source=$($PWD.Path)\static\videos,target=/output" `
+  --mount "type=bind,source=$($PWD.Path)\output,target=/output" `
   street-eye-stream
 ```
 
@@ -193,7 +193,7 @@ Define a política de reinicialização do container:
 ### `--mount`
 
 ```powershell
---mount "type=bind,source=$($PWD.Path)\static\videos,target=/output"
+--mount "type=bind,source=$($PWD.Path)\output,target=/output"
 ```
 
 Compartilha uma pasta do computador com o container. As partes separadas por vírgulas têm estas funções:
@@ -207,16 +207,16 @@ No PowerShell:
 - `$PWD`: representa a pasta atual;
 - `$PWD.Path`: obtém o caminho completo da pasta atual;
 - `$($PWD.Path)`: avalia essa expressão dentro do texto do comando;
-- `\static\videos`: acrescenta a pasta dos vídeos ao caminho atual.
+- `\output`: acrescenta a pasta dos vídeos ao caminho atual.
 
 O resultado é um compartilhamento como este:
 
 ```text
 Computador                         Container
-static/videos        <--------->  /output
+output        <--------->  /output
 ```
 
-Quando o FFmpeg grava `/output/stream.m3u8` dentro do container, o arquivo aparece em `static/videos/stream.m3u8` no computador.
+Quando o FFmpeg grava `/output/stream.m3u8` dentro do container, o arquivo aparece em `output/stream.m3u8` no computador.
 
 Como os arquivos estão em uma pasta compartilhada, eles continuam no computador mesmo que o container seja removido.
 
@@ -294,7 +294,7 @@ docker rm street-eye-stream
 docker run -d `
   --name street-eye-stream `
   --restart unless-stopped `
-  --mount "type=bind,source=$($PWD.Path)\static\videos,target=/output" `
+  --mount "type=bind,source=$($PWD.Path)\output,target=/output" `
   street-eye-stream
 ```
 
@@ -303,7 +303,7 @@ docker run -d `
 - `docker rm`: remove o container antigo, que já está parado.
 - `docker run`: cria um container novo usando a imagem atualizada.
 
-Remover o container não apaga a imagem nem os arquivos mantidos na pasta compartilhada `static/videos`.
+Remover o container não apaga a imagem nem os arquivos mantidos na pasta compartilhada `output`.
 
 ## Containers temporários e `--rm`
 

@@ -1,1 +1,0 @@
-Essa pasta é onde ficará os arquivos .ts e o .m3u8

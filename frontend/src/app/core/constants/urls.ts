@@ -1,3 +1,3 @@
 export abstract class Urls {
-  static readonly API_BASE_URL = 'http://localhost:8080';
+  static readonly API_BASE_URL = 'http://api:3000';
 }

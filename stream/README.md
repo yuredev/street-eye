@@ -10,11 +10,7 @@ Gera HLS a partir de um MP4 em loop. O FFmpeg produz arquivos; a API entrega a p
 
 ## Docker Compose
 
-A partir da raiz, `docker compose up --build -d stream` constrói e inicia o produtor. O Compose compartilha `stream/output` com o produtor em `/output` e com a API em `/stream/output`, somente para leitura. Nenhuma porta é necessária no produtor.
-
-## API local
-
-Executando a API com diretório de trabalho `api/`, o caminho padrão é `../stream/output`. Para outro diretório de trabalho, defina `STREAM_OUTPUT_DIRECTORY` com o caminho absoluto de `stream/output` (ou relativo ao diretório usado para iniciar a API). No Compose, essa variável já aponta para `/stream/output`.
+A partir da raiz, `docker compose up --build -d stream` constrói e inicia o produtor. Nenhuma porta é necessária no produtor.
 
 O vídeo e as saídas permanecem no computador, mas não são versionados. Para construir a imagem em outro checkout, forneça `input/video.mp4`.
 

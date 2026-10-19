@@ -22,7 +22,7 @@ export class CameraViewModalComponent implements AfterViewInit {
 
   ngAfterViewInit(): void {
     const video = this.videoRef.nativeElement;
-    const streamUrl = 'http://localhost:8080/video';
+    const streamUrl = 'http://localhost:3000/video';
 
     // se estivermos em um browser que suporta é só jogar a URL na tag vídeo
     if (video.canPlayType('application/vnd.apple.mpegurl')) {

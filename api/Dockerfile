@@ -10,4 +10,6 @@ COPY ["application-local.yaml", "application.yaml", "./"]
 
 RUN mvn -DskipTests package
 
+EXPOSE 3000
+
 CMD ["java", "-jar", "target/street-eye-backend-0.0.1-SNAPSHOT.jar"]

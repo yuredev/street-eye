@@ -1,0 +1,7 @@
+nav { display: flex; align-items: center; gap: 16px; margin-left: 28px; }
+nav a { color: white; text-decoration: none; font-size: 14px; opacity: .85; }
+nav a.active { opacity: 1; text-decoration: underline; text-underline-offset: 6px; }
+@media (max-width: 640px) {
+  nav { gap: 8px; margin-left: 12px; }
+  nav a { font-size: 11px; }
+}

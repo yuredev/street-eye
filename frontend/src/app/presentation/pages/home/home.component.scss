@@ -1,0 +1,9 @@
+main { min-height: 100vh; }
+.map-guide, .feedback { position: absolute; z-index: 1000; left: 54px; margin: 12px; padding: 10px 14px; background: white; border-radius: 8px; box-shadow: 0 2px 8px #0003; }
+.map-guide { top: 64px; }
+.map-guide { display: flex; align-items: center; gap: 12px; }
+.map-guide button, .map-guide a { background: #4558af; color: white; border-radius: 6px; padding: 8px 12px; cursor: pointer; text-decoration: none; white-space: nowrap; }
+.map-guide button:hover, .map-guide a:hover { background: #34448f; }
+.feedback { top: 118px; }
+.erro { color: #a32840; }
+.aviso { color: #276335; }

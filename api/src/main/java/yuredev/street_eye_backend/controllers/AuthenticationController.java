@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.RequiredArgsConstructor;
 import yuredev.street_eye_backend.config.TokenService;
 import yuredev.street_eye_backend.models.Usuario;
+import yuredev.street_eye_backend.models.PapelUsuario;
 import yuredev.street_eye_backend.models.dto.RegisterDTO;
 import yuredev.street_eye_backend.models.dto.auth.AuthDTO;
 import yuredev.street_eye_backend.models.dto.auth.ResponseAuthDTO;
@@ -38,11 +39,15 @@ public class AuthenticationController {
 
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterDTO registerDTO) {
+        if (registerDTO.login() == null || registerDTO.login().isBlank()
+                || registerDTO.password() == null || registerDTO.password().isBlank()) {
+            return ResponseEntity.badRequest().build();
+        }
         if (this.userRepository.findByLogin(registerDTO.login()) != null) {
             return ResponseEntity.badRequest().build();
         }
         var encryptedPassword = new BCryptPasswordEncoder().encode(registerDTO.password());
-        var user = userRepository.save(new Usuario(registerDTO.role(), registerDTO.login(), encryptedPassword));
+        var user = userRepository.save(new Usuario(PapelUsuario.USER, registerDTO.login(), encryptedPassword));
         user.setSenha(null);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }

@@ -1,19 +1,13 @@
-#botao-redondo {
-  border-radius: 50px;
-  border-style: solid;
-  border-width: 1px;
-  padding: 5px;
+.profile-button {
+  display: grid;
+  place-items: center;
+  flex: none;
+  padding: 0;
+  border: 1px solid white;
+  border-radius: 50%;
+  line-height: 1;
+  font-size: 18px;
+  font-weight: 500;
+  text-transform: uppercase;
   cursor: pointer;
-}
-
-#botao-redondo>button {
-  cursor: pointer;
-  -webkit-user-select: none;
-  /* Safari */
-  -moz-user-select: none;
-  /* Firefox */
-  -ms-user-select: none;
-  /* IE10+ */
-  user-select: none;
-  /* Standard */
 }

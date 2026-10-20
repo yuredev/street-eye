@@ -1,0 +1,16 @@
+<app-home-page-toolbar [login]="eu?.login ?? ''" (sair)="sair()" />
+<main class="page">
+  <h1>Meu Perfil</h1>
+  <p class="intro">Altere seu login ou sua senha. Depois de salvar, entre novamente.</p>
+  @if (erro) { <p class="feedback error" role="alert">{{ erro }}</p> }
+  <section class="card">
+    <h2>Dados de acesso</h2>
+    <form class="form-grid" (ngSubmit)="salvar()">
+      <label>Login <input name="login" [(ngModel)]="login" required /></label>
+      <label>Nova senha <input name="senha" [(ngModel)]="senha" type="password" autocomplete="new-password" /></label>
+      <label>Confirmar nova senha <input name="confirmarSenha" [(ngModel)]="confirmarSenha" type="password" autocomplete="new-password" /></label>
+      <p class="intro">Deixe os dois campos de senha vazios para mantê-la.</p>
+      <div><button type="submit">Salvar perfil</button></div>
+    </form>
+  </section>
+</main>

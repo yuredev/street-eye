@@ -1,9 +1,6 @@
 export abstract class StringUtils {
   static getInitials(name: string) {
-    const initials = name.trim().split(' ');
-    if (initials.length === 1) {
-      return initials[0][0];
-    }
-    return initials[0][0] + initials[1][0];
+    const parts = name.trim().split(/\s+/).filter(Boolean);
+    return parts.slice(0, 2).map(part => part[0]).join('').toUpperCase();
   }
 }

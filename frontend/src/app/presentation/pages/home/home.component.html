@@ -1,4 +1,24 @@
 <main>
-  <app-home-page-toolbar />
-  <app-map />
+  <app-home-page-toolbar [login]="login" (sair)="sair()" />
+  <div class="map-guide">
+    @if (modoAdicionar) {
+      <span>Clique no local da nova câmera.</span>
+      <button type="button" (click)="encerrarAdicao()">Cancelar</button>
+    } @else {
+      <span>
+        @if (!comunidadesCarregadas) { Carregando câmeras... }
+        @else if (cameras.length) { Clique em uma câmera para visualizar. }
+        @else { Nenhuma câmera disponível no mapa. }
+      </span>
+      @if (!comunidades.length && comunidadesCarregadas) {
+        <a routerLink="/comunidades">Criar comunidade</a>
+      } @else {
+        <button type="button" (click)="iniciarAdicao()">Adicionar câmera</button>
+      }
+    }
+  </div>
+  @if (erro) { <p class="feedback erro" role="alert">{{ erro }}</p> }
+  @if (aviso) { <p class="feedback aviso" role="status">{{ aviso }}</p> }
+  <app-map [cameras]="cameras" [modoAdicionar]="modoAdicionar"
+    (localSelecionado)="adicionarNoLocal($event)" (cameraSelecionada)="visualizar($event)" />
 </main>

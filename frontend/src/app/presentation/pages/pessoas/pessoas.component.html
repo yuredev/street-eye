@@ -1,0 +1,45 @@
+<app-home-page-toolbar [login]="login" (sair)="sair()" />
+<main class="page">
+  <h1>Pessoas</h1>
+  <p class="intro">Escolha uma comunidade para controlar quem pode ver suas câmeras.</p>
+  @if (erro) { <p class="feedback error" role="alert">{{ erro }}</p> }
+  @if (aviso) { <p class="feedback" role="status">{{ aviso }}</p> }
+  @if (!comunidades.length) {
+    <section class="card"><p>Você ainda não participa de uma comunidade.</p>
+      <a class="button-link" routerLink="/comunidades">Criar comunidade</a></section>
+  } @else {
+    <section class="card">
+      <label>Comunidade
+        <select name="comunidade" [(ngModel)]="comunidadeId" (ngModelChange)="carregarMembros()">
+          @for (comunidade of comunidades; track comunidade.id) {
+            <option [value]="comunidade.id">{{ comunidade.nome }}</option>
+          }
+        </select>
+      </label>
+    </section>
+    <section class="card">
+      <h2>Pessoas desta comunidade</h2>
+      @if (!membros.length) { <p class="empty">Nenhuma pessoa cadastrada aqui.</p> }
+      <ul class="list">
+        @for (membro of membros; track membro.id) {
+          <li><span>{{ membro.login }}</span><button type="button" class="secondary" (click)="remover(membro)">Remover</button></li>
+        }
+      </ul>
+    </section>
+    <section class="card">
+      <h2>Adicionar pessoa existente</h2>
+      <form class="form-grid" (ngSubmit)="adicionarExistente()">
+        <label>Login <input name="loginExistente" [(ngModel)]="loginExistente" required /></label>
+        <div><button type="submit">Adicionar à comunidade</button></div>
+      </form>
+    </section>
+    <section class="card">
+      <h2>Cadastrar nova pessoa</h2>
+      <form class="form-grid" (ngSubmit)="cadastrar()">
+        <label>Login <input name="novoLogin" [(ngModel)]="novoLogin" required /></label>
+        <label>Senha inicial <input name="novaSenha" [(ngModel)]="novaSenha" type="password" required /></label>
+        <div><button type="submit">Cadastrar e adicionar</button></div>
+      </form>
+    </section>
+  }
+</main>

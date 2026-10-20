@@ -1,4 +1,6 @@
-#video-player {
-  width: 100%;
-  height: auto;
-}
+.camera-viewer { padding: 20px; }
+header { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 16px; }
+h2 { font-size: 20px; }
+button { padding: 8px 12px; border-radius: 6px; background: #4558af; color: white; cursor: pointer; }
+video { display: block; width: 100%; min-height: 250px; max-height: 70vh; background: #111; }
+p { margin-top: 12px; color: #a32840; }

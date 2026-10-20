@@ -1,2 +1,8 @@
-<video id="video-player" #videoPlayer autoplay muted>
-</video>
+<section class="camera-viewer">
+  <header>
+    <h2>{{ data.nome }}</h2>
+    <button type="button" (click)="dialog.close()" aria-label="Fechar visualização">Fechar</button>
+  </header>
+  <video #videoPlayer controls autoplay muted playsinline></video>
+  @if (erro) { <p role="status">{{ erro }}</p> }
+</section>

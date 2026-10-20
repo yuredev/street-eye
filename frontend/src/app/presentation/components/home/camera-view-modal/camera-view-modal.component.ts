@@ -1,12 +1,7 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Inject,
-  ViewChild,
-} from '@angular/core';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AfterViewInit, Component, ElementRef, Inject, OnDestroy, ViewChild } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import Hls from 'hls.js';
+import { CameraCadastro } from '../../../../logic/services/cadastro.service';
 
 @Component({
   selector: 'app-camera-view-modal',
@@ -14,29 +9,38 @@ import Hls from 'hls.js';
   styleUrls: ['./camera-view-modal.component.scss'],
   standalone: true,
 })
-export class CameraViewModalComponent implements AfterViewInit {
-  @ViewChild('videoPlayer', { static: true })
-  videoRef!: ElementRef<HTMLVideoElement>;
+export class CameraViewModalComponent implements AfterViewInit, OnDestroy {
+  @ViewChild('videoPlayer', { static: true }) videoRef!: ElementRef<HTMLVideoElement>;
+  erro = '';
+  private hls?: Hls;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any) {}
+  constructor(
+    @Inject(MAT_DIALOG_DATA) public data: CameraCadastro,
+    public dialog: MatDialogRef<CameraViewModalComponent>
+  ) {}
 
   ngAfterViewInit(): void {
     const video = this.videoRef.nativeElement;
     const streamUrl = 'http://localhost:3000/video';
 
-    // se estivermos em um browser que suporta é só jogar a URL na tag vídeo
+    video.addEventListener('error', () => this.erro = 'Transmissão indisponível no momento.');
     if (video.canPlayType('application/vnd.apple.mpegurl')) {
       video.src = streamUrl;
     } else if (Hls.isSupported()) {
-      const hls = new Hls();
-      hls.loadSource(streamUrl);
-      hls.attachMedia(video);
+      this.hls = new Hls();
+      this.hls.loadSource(streamUrl);
+      this.hls.attachMedia(video);
 
-      hls.on(Hls.Events.ERROR, (event, data) => {
-        console.error('HLS.js error', data);
+      this.hls.on(Hls.Events.ERROR, (_event, data) => {
+        if (data.fatal) this.erro = 'Transmissão indisponível no momento.';
       });
     } else {
-      console.error('HLS não suportado nesse navegador');
+      this.erro = 'Este navegador não suporta a transmissão.';
     }
+  }
+
+  ngOnDestroy(): void {
+    this.hls?.destroy();
+    this.videoRef?.nativeElement.pause();
   }
 }

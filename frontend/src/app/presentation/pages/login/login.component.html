@@ -4,7 +4,7 @@
       <h1>Street Eye</h1>
     </div>
 
-    <h2 class="login-title">Faça login na sua conta</h2>
+    <h2 class="login-title">{{ cadastro ? 'Crie sua conta' : 'Faça login na sua conta' }}</h2>
     <p class="login-subtitle">Insira suas credenciais abaixo</p>
 
     <form [formGroup]="form" (ngSubmit)="onSubmit()">
@@ -50,7 +50,10 @@
         }
       </div>
 
-      <button type="submit" class="btn-login">Entrar</button>
+      @if (mensagemDeErro) { <p role="alert">{{ mensagemDeErro }}</p> }
+      @if (mensagem) { <p role="status">{{ mensagem }}</p> }
+      <button type="submit" class="btn-login">{{ cadastro ? 'Cadastrar' : 'Entrar' }}</button>
     </form>
+    <button type="button" (click)="cadastro = !cadastro">{{ cadastro ? 'Já tenho conta' : 'Criar conta' }}</button>
   </div>
 </div>

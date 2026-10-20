@@ -1,0 +1,30 @@
+<app-home-page-toolbar [login]="login" (sair)="sair()" />
+<main class="page">
+  <h1>Comunidades</h1>
+  <p class="intro">Crie um grupo para decidir quem pode ver as câmeras compartilhadas.</p>
+  @if (erro) { <p class="feedback error" role="alert">{{ erro }}</p> }
+  @if (aviso) { <p class="feedback" role="status">{{ aviso }}</p> }
+  <section class="card">
+    <h2>{{ editando ? 'Editar comunidade' : 'Nova comunidade' }}</h2>
+    <form class="form-grid" (ngSubmit)="salvar()">
+      <label>Nome <input name="nome" [(ngModel)]="nome" required maxlength="255" /></label>
+      <label>Descrição <textarea name="descricao" [(ngModel)]="descricao" rows="3"></textarea></label>
+      <div class="actions">
+        <button type="submit">{{ editando ? 'Salvar alterações' : 'Criar comunidade' }}</button>
+        @if (editando) { <button type="button" class="secondary" (click)="limpar()">Cancelar</button> }
+      </div>
+    </form>
+  </section>
+  <section class="card">
+    <h2>Minhas comunidades</h2>
+    @if (!comunidades.length) { <p class="empty">Nenhuma comunidade cadastrada ainda.</p> }
+    <ul class="list">
+      @for (comunidade of comunidades; track comunidade.id) {
+        <li><span><strong>{{ comunidade.nome }}</strong><br />{{ comunidade.descricao }}</span>
+          <span class="actions"><button type="button" class="secondary" (click)="editar(comunidade)">Editar</button>
+            <button type="button" class="danger" (click)="excluir(comunidade)">Excluir</button></span>
+        </li>
+      }
+    </ul>
+  </section>
+</main>

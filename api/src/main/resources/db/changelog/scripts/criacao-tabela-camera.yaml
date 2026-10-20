@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3-1
+      author: StreetEye
+      changes:
+        - sqlFile:
+            dbms: postgresql
+            path: db/changelog/scripts/criacao-tabela-camera.sql

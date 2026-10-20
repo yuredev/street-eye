@@ -1,17 +1,10 @@
-<div
-  id="botao-redondo"
-  [ngStyle]="{
-    width: largura,
-    height: altura,
-    backgroundColor: cor,
-    color: corTexto
-  }"
->
-  <button matButton [matMenuTriggerFor]="menu">
-    {{ iniciaisNomeUsuario }}
-  </button>
-  <mat-menu #menu="matMenu">
-    <button mat-menu-item>Meu Perfil</button>
-    <button mat-menu-item>Sair</button>
-  </mat-menu>
-</div>
+<button type="button" class="profile-button" [matMenuTriggerFor]="menu"
+  [style.width.px]="largura" [style.height.px]="altura"
+  [style.backgroundColor]="cor" [style.color]="corTexto"
+  [attr.aria-label]="'Perfil de ' + usuario.login">
+  {{ iniciaisNomeUsuario }}
+</button>
+<mat-menu #menu="matMenu">
+  <button mat-menu-item routerLink="/perfil">Meu Perfil</button>
+  <button mat-menu-item (click)="sair.emit()">Sair</button>
+</mat-menu>

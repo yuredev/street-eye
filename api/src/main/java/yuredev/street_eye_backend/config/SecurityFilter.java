@@ -18,8 +18,8 @@ import yuredev.street_eye_backend.repositories.UserRepository;
 @Component
 @RequiredArgsConstructor
 public class SecurityFilter extends OncePerRequestFilter {
-    TokenService tokenService;
-    UserRepository userRepository;
+    private final TokenService tokenService;
+    private final UserRepository userRepository;
 
     @SuppressWarnings("null")
     @Override
@@ -29,8 +29,10 @@ public class SecurityFilter extends OncePerRequestFilter {
         if (token != null) {
             var login = tokenService.validateToken(token);
             UserDetails user = userRepository.findByLogin(login);
-            var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
-            SecurityContextHolder.getContext().setAuthentication(authentication);
+            if (user != null) {
+                var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
         }
         filterChain.doFilter(request, response);
 

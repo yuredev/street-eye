@@ -5,3 +5,5 @@ databaseChangeLog:
       file: 'db/changelog/scripts/criacao-tabela-comunidade.yaml'
   - include:
       file: 'db/changelog/scripts/criacao-relacao-usuario-comunidade.yaml'
+  - include:
+      file: 'db/changelog/scripts/criacao-tabela-camera.yaml'

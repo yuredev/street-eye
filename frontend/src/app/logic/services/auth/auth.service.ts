@@ -12,8 +12,12 @@ export class AuthService {
 
   login(reqDTO: AuthRequestDTO): Observable<AuthResponseDTO> {
     return this.httpClient.post<AuthResponseDTO>(
-      `${Urls.API_BASE_URL}/login`,
+      `${Urls.API_BASE_URL}/auth/login`,
       reqDTO
     );
+  }
+
+  register(login: string, password: string): Observable<unknown> {
+    return this.httpClient.post(`${Urls.API_BASE_URL}/auth/register`, { login, password });
   }
 }

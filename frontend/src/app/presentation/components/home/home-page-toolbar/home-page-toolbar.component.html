@@ -1,4 +1,13 @@
 <app-toolbar titulo="StreetEye">
+  <nav aria-label="Navegação principal">
+    <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Mapa</a>
+    <a routerLink="/comunidades" routerLinkActive="active">Comunidades</a>
+    <a routerLink="/pessoas" routerLinkActive="active">Pessoas</a>
+    <a routerLink="/cameras" routerLinkActive="active">Câmeras</a>
+  </nav>
   <div class="spacer"></div>
-  <app-botao-perfil-circular corTexto="white" cor="purple" [usuario]="{ name: 'Yure Matias', id: 551, login: 'yure123' }" />
+  @if (login) {
+    <app-botao-perfil-circular [largura]="40" [altura]="40" corTexto="white" cor="#7100aa"
+      [usuario]="{ name: login, login: login, id: 0 }" (sair)="sair.emit()" />
+  }
 </app-toolbar>

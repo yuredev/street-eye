@@ -1,0 +1,7 @@
+mat-dialog-content { min-width: min(360px, 80vw); }
+p { margin: 0 0 16px; }
+form { display: grid; gap: 8px; }
+label { font-weight: 500; }
+input, select { padding: 10px; border: 1px solid #aaa; border-radius: 6px; background: white; }
+button { padding: 9px 14px; border-radius: 6px; cursor: pointer; }
+button.primary { background: #6200a8; color: white; }

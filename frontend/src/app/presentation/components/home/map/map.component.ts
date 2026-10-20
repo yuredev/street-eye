@@ -1,30 +1,27 @@
-import { Component, AfterViewInit, inject } from '@angular/core';
-import { MatDialog, MatDialogModule } from '@angular/material/dialog';
+import { Component, AfterViewInit, EventEmitter, Input, OnChanges, OnDestroy, Output } from '@angular/core';
 import * as L from 'leaflet';
-import { CameraViewModalComponent } from '../camera-view-modal/camera-view-modal.component';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatIconModule } from '@angular/material/icon';
-import { CameraService } from '../../../../logic/services/camera/camera.service';
+import { CameraCadastro } from '../../../../logic/services/cadastro.service';
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.scss'],
   standalone: true,
-  imports: [MatToolbarModule, MatIconModule, MatDialogModule],
+  imports: [],
 })
-export class MapComponent implements AfterViewInit {
+export class MapComponent implements AfterViewInit, OnChanges, OnDestroy {
+  @Input() cameras: CameraCadastro[] = [];
+  @Input() modoAdicionar = false;
+  @Output() localSelecionado = new EventEmitter<{ latitude: number; longitude: number }>();
+  @Output() cameraSelecionada = new EventEmitter<CameraCadastro>();
   private map!: L.Map;
-
-  constructor(
-    private cameraService: CameraService,
-    private dialog: MatDialog
-  ) {}
+  private markers = L.layerGroup();
+  private resizeObserver?: ResizeObserver;
 
   private initMap(): void {
     this.map = L.map('map', {
       center: [-5.8238832, -35.2045377],
-      zoom: 90,
+      zoom: 13,
     });
 
     const tiles = L.tileLayer(
@@ -38,41 +35,39 @@ export class MapComponent implements AfterViewInit {
     );
 
     tiles.addTo(this.map);
-  }
-
-  private loadMarkers(): void {
-    this.cameraService.getCameras().subscribe({
-      next: (cameras) => {
-        cameras.forEach((cam) => {
-          const { latitude, longitude } = cam.localizacao;
-
-          const icone = L.divIcon({
-            html: `<i class="material-icons" style="color: #7700FF; font-size: 32px;">videocam</i>`,
-            iconSize: [30, 30],
-          });
-          const marker = L.marker([latitude, longitude], {
-            icon: icone,
-          }).addTo(this.map);
-          marker.on('click', () => this.openModal());
-        });
-      },
-      error: (error) => {
-        alert('Erro ao buscar cameras');
-      },
+    this.markers.addTo(this.map);
+    this.map.on('click', event => {
+      if (this.modoAdicionar) this.localSelecionado.emit({
+        latitude: event.latlng.lat, longitude: event.latlng.lng
+      });
     });
   }
 
-  private openModal(): void {
-    this.dialog.open(CameraViewModalComponent, {
-      data: { message: 'osjgoisjdg' },
-      width: '1800px',
-      minWidth: '780px',
-    });
+  private drawMarkers(): void {
+    if (!this.map) return;
+    this.markers.clearLayers();
+    for (const camera of this.cameras) {
+      const icon = L.divIcon({
+        html: '<i class="material-icons" style="color: #7700FF; font-size: 32px;">videocam</i>',
+        iconSize: [30, 30],
+      });
+      L.marker([camera.latitude, camera.longitude], { icon, bubblingMouseEvents: false })
+        .bindTooltip(camera.nome)
+        .on('click', () => {
+          if (!this.modoAdicionar) this.cameraSelecionada.emit(camera);
+        })
+        .addTo(this.markers);
+    }
   }
 
   ngAfterViewInit(): void {
     this.initMap();
-    this.loadMarkers();
+    this.drawMarkers();
+    this.resizeObserver = new ResizeObserver(() => this.map.invalidateSize());
+    this.resizeObserver.observe(this.map.getContainer());
     this.map.invalidateSize();
   }
+
+  ngOnChanges(): void { this.drawMarkers(); }
+  ngOnDestroy(): void { this.resizeObserver?.disconnect(); this.map?.remove(); }
 }

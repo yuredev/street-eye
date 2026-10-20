@@ -16,6 +16,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 
 @Data
@@ -30,6 +31,7 @@ public class Usuario implements UserDetails {
     private String id;
     private PapelUsuario papel;
     private String login;
+    @JsonIgnore
     private String senha;
 
     public Usuario(PapelUsuario papel, String login, String senha) {
@@ -53,6 +55,7 @@ public class Usuario implements UserDetails {
     }
 
     @Override
+    @JsonIgnore
     public String getPassword() {
         return senha;
     }

@@ -370,3 +370,34 @@ O Docker Compose não substitui o Dockerfile. Um pode construir a imagem, enquan
 - `restart`: define quando o Docker deve reiniciar um container.
 
 Não é necessário usar Docker Compose para executar apenas um container durante os primeiros testes. Ele se torna útil quando é preciso executar e configurar vários containers juntos.
+
+### Esperar o PostgreSQL antes de iniciar a API
+
+Iniciar um container não significa que o programa dentro dele já esteja pronto para receber conexões. Ao subir tudo com `docker compose up`, a API pode tentar conectar enquanto o PostgreSQL ainda está inicializando.
+
+No serviço `banco`, o `healthcheck` verifica se o PostgreSQL está aceitando conexões:
+
+```yaml
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U yure -d street_eye"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+```
+
+- `test`: executa a verificação com `pg_isready`.
+- `interval`: repete a verificação a cada 5 segundos.
+- `timeout`: limita cada tentativa a 3 segundos.
+- `retries`: marca o container como não saudável após 5 falhas consecutivas.
+
+No serviço `api`, a dependência espera o banco ficar saudável:
+
+```yaml
+    depends_on:
+      banco:
+        condition: service_healthy
+```
+
+O `depends_on` simples espera apenas o container iniciar. Com `service_healthy`, o Compose espera o `healthcheck` passar antes de iniciar a API. Essa condição controla a inicialização; não reinicia a API automaticamente se o banco falhar depois.
+
+`UnknownHostException: banco` significa que a API não conseguiu resolver o nome do serviço para um endereço IP. Também é preciso verificar se o container do banco iniciou e compartilha a rede da API; o healthcheck não corrige conflitos de porta ou redes separadas.

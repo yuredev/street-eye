@@ -7,6 +7,11 @@ services:
       POSTGRES_DB: street_eye
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U yure -d street_eye"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
       
   api:
     image: street-eye-api:local
@@ -19,7 +24,10 @@ services:
       STREAM_OUTPUT_DIRECTORY: /stream/output
     volumes:
       - ./stream/output:/stream/output:ro
-
+    depends_on:
+      banco:
+        condition: service_healthy
+      
   stream:
     image: street-eye-stream:local
     build:

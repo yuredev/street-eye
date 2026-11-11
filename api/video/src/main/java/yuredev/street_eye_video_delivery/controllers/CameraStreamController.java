@@ -1,4 +1,4 @@
-package yuredev.street_eye_backend.controllers;
+package yuredev.street_eye_video_delivery.controllers;
 
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.beans.factory.annotation.Value;

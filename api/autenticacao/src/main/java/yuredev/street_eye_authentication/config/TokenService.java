@@ -1,4 +1,4 @@
-package yuredev.street_eye_backend.config;
+package yuredev.street_eye_authentication.config;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
@@ -12,7 +12,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 
-import yuredev.street_eye_backend.models.Usuario;
+import yuredev.street_eye_authentication.models.Usuario;
 
 
 @Service

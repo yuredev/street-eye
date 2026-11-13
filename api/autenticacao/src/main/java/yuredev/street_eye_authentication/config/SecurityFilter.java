@@ -1,4 +1,4 @@
-package yuredev.street_eye_backend.config;
+package yuredev.street_eye_authentication.config;
 
 import java.io.IOException;
 
@@ -13,13 +13,13 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import yuredev.street_eye_backend.repositories.UserRepository;
+import yuredev.street_eye_authentication.repositories.UsuarioRepository;
 
 @Component
 @RequiredArgsConstructor
 public class SecurityFilter extends OncePerRequestFilter {
     private final TokenService tokenService;
-    private final UserRepository userRepository;
+    private final UsuarioRepository usuarioRepo;
 
     @SuppressWarnings("null")
     @Override
@@ -28,7 +28,7 @@ public class SecurityFilter extends OncePerRequestFilter {
         var token = recoverToken(request);
         if (token != null) {
             var login = tokenService.validateToken(token);
-            UserDetails user = userRepository.findByLogin(login);
+            UserDetails user = usuarioRepo.findByLogin(login);
             if (user != null) {
                 var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
                 SecurityContextHolder.getContext().setAuthentication(authentication);

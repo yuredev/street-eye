@@ -1,4 +1,4 @@
-package yuredev.street_eye_backend.models;
+package yuredev.street_eye_authentication.models;
 
 public enum PapelUsuario {
     ADMIN("admin"),

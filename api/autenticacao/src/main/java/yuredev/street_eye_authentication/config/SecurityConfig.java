@@ -1,4 +1,4 @@
-package yuredev.street_eye_backend.config;
+package yuredev.street_eye_authentication.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;

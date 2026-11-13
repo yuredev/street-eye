@@ -1,16 +1,16 @@
-package yuredev.street_eye_backend.controllers;
+package yuredev.street_eye_authentication.controllers;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
-import yuredev.street_eye_backend.config.TokenService;
-import yuredev.street_eye_backend.models.Usuario;
-import yuredev.street_eye_backend.models.PapelUsuario;
-import yuredev.street_eye_backend.models.dto.RegisterDTO;
-import yuredev.street_eye_backend.models.dto.auth.AuthDTO;
-import yuredev.street_eye_backend.models.dto.auth.ResponseAuthDTO;
-import yuredev.street_eye_backend.repositories.UserRepository;
+import yuredev.street_eye_authentication.config.TokenService;
+import yuredev.street_eye_authentication.models.Usuario;
+import yuredev.street_eye_authentication.models.PapelUsuario;
+import yuredev.street_eye_authentication.models.dto.RegisterDTO;
+import yuredev.street_eye_authentication.models.dto.auth.AuthDTO;
+import yuredev.street_eye_authentication.models.dto.auth.ResponseAuthDTO;
+import yuredev.street_eye_authentication.repositories.UsuarioRepository;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 @RequiredArgsConstructor
 public class AuthenticationController {
     final private AuthenticationManager authenticationManager;
-    final private UserRepository userRepository;
+    final private UsuarioRepository usuarioRepo;
     final private TokenService tokenService;
 
     @PostMapping("/login")
@@ -43,11 +43,11 @@ public class AuthenticationController {
                 || registerDTO.password() == null || registerDTO.password().isBlank()) {
             return ResponseEntity.badRequest().build();
         }
-        if (this.userRepository.findByLogin(registerDTO.login()) != null) {
+        if (this.usuarioRepo.findByLogin(registerDTO.login()) != null) {
             return ResponseEntity.badRequest().build();
         }
         var encryptedPassword = new BCryptPasswordEncoder().encode(registerDTO.password());
-        var user = userRepository.save(new Usuario(PapelUsuario.USER, registerDTO.login(), encryptedPassword));
+        var user = usuarioRepo.save(new Usuario(PapelUsuario.USER, registerDTO.login(), encryptedPassword));
         user.setSenha(null);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }

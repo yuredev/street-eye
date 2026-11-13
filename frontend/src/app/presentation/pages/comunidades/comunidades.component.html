@@ -21,8 +21,10 @@
     <ul class="list">
       @for (comunidade of comunidades; track comunidade.id) {
         <li><span><strong>{{ comunidade.nome }}</strong><br />{{ comunidade.descricao }}</span>
+          @if (comunidade.papel === 'ADMINISTRADOR') {
           <span class="actions"><button type="button" class="secondary" (click)="editar(comunidade)">Editar</button>
             <button type="button" class="danger" (click)="excluir(comunidade)">Excluir</button></span>
+          }
         </li>
       }
     </ul>

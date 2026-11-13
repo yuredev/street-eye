@@ -1,0 +1,7 @@
+package yuredev.street_eye_authentication.models.dto;
+
+import yuredev.street_eye_authentication.models.PapelUsuario;
+
+public record RegisterDTO(String login, String password, PapelUsuario role) {
+    
+}

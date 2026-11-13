@@ -31,7 +31,7 @@ export class HomeComponent implements OnInit {
     if (!localStorage.getItem('authToken')) { this.router.navigateByUrl('/login'); return; }
     this.modoAdicionar = this.route.snapshot.queryParamMap.get('adicionar') === '1';
     this.cadastro.eu().subscribe({
-      next: pessoa => this.login = pessoa.login,
+      next: usuario => this.login = usuario.login,
       error: () => this.sair()
     });
     this.carregarCameras();

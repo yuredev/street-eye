@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: 4-papeis-comunidade
+      author: Codex
+      changes:
+        - sqlFile:
+            dbms: postgresql
+            path: db/changelog/scripts/papeis-comunidade.sql

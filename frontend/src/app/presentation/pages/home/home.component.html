@@ -7,8 +7,6 @@
     } @else {
       <span>
         @if (!comunidadesCarregadas) { Carregando câmeras... }
-        @else if (cameras.length) { Clique em uma câmera para visualizar. }
-        @else { Nenhuma câmera disponível no mapa. }
       </span>
       @if (!comunidades.length && comunidadesCarregadas) {
         <a routerLink="/comunidades">Criar comunidade</a>

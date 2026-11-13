@@ -22,6 +22,7 @@
     </properties>
 
     <modules>
+        <module>autenticacao</module>
         <module>aplicacao</module>
         <module>video</module>
     </modules>

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { HomePageToolbarComponent } from '../../components/home/home-page-toolbar/home-page-toolbar.component';
-import { CadastroService, Pessoa } from '../../../logic/services/cadastro.service';
+import { CadastroService, Usuario } from '../../../logic/services/cadastro.service';
 
 @Component({
   selector: 'app-perfil', standalone: true,
@@ -11,7 +11,7 @@ import { CadastroService, Pessoa } from '../../../logic/services/cadastro.servic
   styleUrls: ['../cadastro-page.scss']
 })
 export class PerfilComponent implements OnInit {
-  eu?: Pessoa;
+  eu?: Usuario;
   login = '';
   senha = '';
   confirmarSenha = '';
@@ -29,7 +29,7 @@ export class PerfilComponent implements OnInit {
   salvar(): void {
     if (!this.eu || !this.login.trim()) return;
     if (this.senha !== this.confirmarSenha) { this.erro = 'As senhas não coincidem.'; return; }
-    this.cadastro.atualizarPessoa(this.eu.id, this.login.trim(), this.senha).subscribe({
+    this.cadastro.atualizarUsuario(this.eu.id, this.login.trim(), this.senha).subscribe({
       next: () => {
         localStorage.removeItem('authToken');
         this.router.navigateByUrl('/login?atualizado=1');

@@ -4,6 +4,8 @@ WORKDIR /app
 
 COPY ["aplicacao", "./aplicacao"]
 
+COPY ["autenticacao", "./autenticacao"]
+
 COPY ["video", "./video"]
 
 COPY ["pom.xml", "./pom.xml"]

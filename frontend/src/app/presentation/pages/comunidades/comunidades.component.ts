@@ -31,11 +31,13 @@ export class ComunidadesComponent implements OnInit {
     this.cadastro.comunidades().subscribe({ next: c => this.comunidades = c, error: () => this.erro = 'Não foi possível carregar as comunidades.' });
   }
   editar(comunidade: Comunidade): void {
+    if (comunidade.papel !== 'ADMINISTRADOR') return;
     this.editando = comunidade; this.nome = comunidade.nome; this.descricao = comunidade.descricao;
     this.aviso = ''; this.erro = '';
   }
   limpar(): void { this.editando = undefined; this.nome = ''; this.descricao = ''; }
   salvar(): void {
+    if (this.editando && this.editando.papel !== 'ADMINISTRADOR') return;
     const nome = this.nome.trim();
     if (!nome) return;
     const request: Observable<unknown> = this.editando ?
@@ -43,14 +45,15 @@ export class ComunidadesComponent implements OnInit {
       this.cadastro.criarComunidade(nome, this.descricao);
     request.subscribe({
       next: () => { this.limpar(); this.carregar(); this.erro = ''; this.aviso = 'Comunidade salva.'; },
-      error: () => this.erro = 'Não foi possível salvar a comunidade.'
+      error: erro => this.erro = erro.status === 403 ? 'Somente administradores podem editar esta comunidade.' : 'Não foi possível salvar a comunidade.'
     });
   }
   excluir(comunidade: Comunidade): void {
+    if (comunidade.papel !== 'ADMINISTRADOR') return;
     if (!confirm(`Excluir a comunidade ${comunidade.nome} e suas câmeras?`)) return;
     this.cadastro.excluirComunidade(comunidade.id).subscribe({
       next: () => { if (this.editando?.id === comunidade.id) this.limpar(); this.carregar(); this.aviso = 'Comunidade excluída.'; this.erro = ''; },
-      error: () => this.erro = 'Não foi possível excluir a comunidade.'
+      error: erro => this.erro = erro.status === 403 ? 'Somente administradores podem excluir esta comunidade.' : 'Não foi possível excluir a comunidade.'
     });
   }
 }

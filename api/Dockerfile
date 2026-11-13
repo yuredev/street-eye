@@ -2,7 +2,9 @@ FROM maven:3.9-eclipse-temurin-17-alpine AS build
 
 WORKDIR /app
 
-COPY ["src", "./src"]
+COPY ["aplicacao", "./aplicacao"]
+
+COPY ["video", "./video"]
 
 COPY ["pom.xml", "./pom.xml"]
 
@@ -12,4 +14,4 @@ RUN mvn -DskipTests package
 
 EXPOSE 3000
 
-CMD ["java", "-jar", "target/street-eye-backend-0.0.1-SNAPSHOT.jar"]
+CMD ["java", "-jar", "aplicacao/target/street-eye-backend-0.0.1-SNAPSHOT.jar"]

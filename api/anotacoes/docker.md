@@ -371,6 +371,47 @@ O Docker Compose não substitui o Dockerfile. Um pode construir a imagem, enquan
 
 Não é necessário usar Docker Compose para executar apenas um container durante os primeiros testes. Ele se torna útil quando é preciso executar e configurar vários containers juntos.
 
+### Diferença entre `--build` e `--force-recreate`
+
+Construir uma imagem e recriar um container são operações diferentes:
+
+- **`--build` atua na imagem:** executa o build dos serviços com `build:`. O build pode aproveitar o cache e produzir a mesma imagem que já existia.
+- **`--force-recreate` atua no container:** obriga sua substituição por um novo, mesmo sem mudanças na imagem ou na configuração. Essa opção, por si só, não manda reconstruir a imagem.
+
+| Comando | Comportamento |
+| --- | --- |
+| `docker compose up --build` | Constrói as imagens dos serviços com `build:` antes de iniciar os containers. Não obriga a recriação se a imagem e a configuração continuarem iguais. |
+| `docker compose up --force-recreate` | Recria os containers mesmo que a imagem e a configuração não tenham mudado. Não força a reconstrução das imagens. |
+| `docker compose restart` | Reinicia os mesmos containers, sem recriá-los nem aplicar mudanças do Compose. |
+
+Por padrão, o `docker compose up` recria um container existente quando a imagem ou a configuração do serviço mudou. Portanto, o `--build` pode levar à recriação se produzir uma imagem diferente; executar o build não garante, por si só, que o container será recriado.
+
+No Street Eye, o serviço `banco` usa a imagem pronta `postgres:17-alpine` e não tem `build:`. O `--build` não constrói uma imagem para ele nem força sua recriação.
+
+Para construir as imagens e também obrigar a recriação dos containers, use as duas opções juntas:
+
+```powershell
+docker compose up -d --build --force-recreate
+```
+
+Nesse exemplo:
+
+1. `--build` constrói as imagens da API, do streaming e do frontend, que têm `build:`.
+2. `--force-recreate` obriga a recriação dos containers desses serviços e do banco, mesmo se as imagens continuarem iguais.
+3. `-d` deixa os containers executando em segundo plano.
+
+O banco é recriado usando a imagem pronta; nenhuma imagem é construída para ele. As duas opções se complementam: uma solicita a construção das imagens, a outra garante a recriação dos containers.
+
+Para obrigar a recriação apenas do banco:
+
+```powershell
+docker compose up -d --force-recreate banco
+```
+
+A recriação substitui o container e aplica a configuração do Compose, incluindo sua conexão à rede padrão. Os volumes montados são preservados, mas arquivos gravados somente na camada interna do container são perdidos.
+
+Referência: [documentação oficial de `docker compose up`](https://docs.docker.com/reference/cli/docker/compose/up/).
+
 ### Esperar o PostgreSQL antes de iniciar a API
 
 Iniciar um container não significa que o programa dentro dele já esteja pronto para receber conexões. Ao subir tudo com `docker compose up`, a API pode tentar conectar enquanto o PostgreSQL ainda está inicializando.

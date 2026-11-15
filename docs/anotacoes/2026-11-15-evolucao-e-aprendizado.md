@@ -15,22 +15,22 @@ A CI atual cobre a API; compilar e testar o frontend continua sendo uma extensã
 
 ## Ordem sugerida
 
-Ambientes e segredos entram **agora, antes do primeiro deploy**. Primeiro se aprende a publicar a aplicação atual manualmente; depois se automatiza esse processo. Mensageria fica depois dessa base, para não misturar a primeira publicação com a criação de outro serviço.
+**Mensageria é o próximo estudo**, por escolha do usuário, que já utiliza essa tecnologia no trabalho. Os experimentos podem acontecer localmente, sem depender de CD. Depois vêm ambientes e segredos, antes do primeiro deploy; primeiro se aprende a publicar manualmente e depois se automatiza esse processo.
 
 | Ordem | Estudo | Situação e aplicação no Street Eye |
 |---|---|---|
 | 1 | **Aplicação multimódulo** | Já estudado e aplicado na organização da API. |
 | 2 | **CI com GitHub Actions** | Já estudado e aplicado aos testes da API em PRs para `main`. |
-| 3 | **Ambientes dev/prod e segredos** | Próximo estudo: separar configurações, dados, credenciais e recursos dos ambientes; definir o que pode ir para o Git. |
-| 4 | **Primeiro deploy manual e segurança de exposição** | Publicar uma versão em ambiente de estudo, entender HTTPS, portas, acesso ao banco e persistência. Antes de usar dados reais, resolver as permissões de vídeo. |
-| 5 | **CD com GitHub Actions** | Automatizar build, publicação de imagens e atualização do ambiente, com segredos de deploy e possibilidade de voltar à versão anterior. |
-| 6 | **OAuth2 e OpenID Connect** | Aprender login com provedor de identidade e proteção da API, aproveitando a base de ambientes, URLs e segredos. |
-| 7 | **Mensageria e um segundo serviço** | Criar notificações a partir de eventos de câmeras adicionadas, com aplicações executadas independentemente. |
+| 3 | **Mensageria e um segundo serviço** | Próximo estudo: experimentar localmente notificações a partir de eventos de câmeras adicionadas, relacionando os conceitos ao uso no trabalho. |
+| 4 | **Ambientes dev/prod e segredos** | Separar configurações, dados, credenciais e recursos dos ambientes; definir o que pode ir para o Git. |
+| 5 | **Primeiro deploy manual e segurança de exposição** | Publicar uma versão em ambiente de estudo, entender HTTPS, portas, acesso ao banco e persistência. Antes de usar dados reais, resolver as permissões de vídeo. |
+| 6 | **CD com GitHub Actions** | Automatizar build, publicação de imagens e atualização do ambiente, com segredos de deploy e possibilidade de voltar à versão anterior. |
+| 7 | **OAuth2 e OpenID Connect** | Aprender login com provedor de identidade e proteção da API, aproveitando a base de ambientes, URLs e segredos. |
 | 8 | **Kubernetes ou Swarm** | Estudar orquestração depois de dominar a execução e o deploy dos serviços com Compose. |
 
 Essa ordem é uma sugestão de aprendizado, não uma dependência técnica rígida. O primeiro experimento de OAuth2 pode ser local e não exige concluir CD; ele aparece nessa posição para aproveitar a compreensão de callbacks, HTTPS e credenciais por ambiente.
 
-## Próximo estudo: separar dev e prod
+## Depois da mensageria: separar dev e prod
 
 Vamos considerar apenas **dev** e **prod**, sem homologação. Ambiente não é sinônimo de branch: uma branch pode gerar um artefato, enquanto o ambiente define onde e com quais configurações ele executa.
 
@@ -105,7 +105,7 @@ As referências explicam os conceitos; ao implementar, conferir a documentação
 
 Multimódulo e microsserviços são coisas diferentes. Um projeto Maven pode ter vários módulos e gerar uma única aplicação. Microsserviços são aplicações executadas e implantadas independentemente.
 
-A organização interna já foi explorada. A próxima decisão sobre serviços deve nascer de um fluxo concreto, depois de compreender ambientes e deploy.
+A organização interna já foi explorada. O próximo estudo usa um fluxo concreto de mensageria para experimentar a comunicação entre serviços localmente. O deploy desses serviços será estudado depois.
 
 No Street Eye, uma separação que merece investigação é entre cadastros de comunidades/câmeras e processamento de vídeo. As notificações continuam sendo uma boa primeira aplicação independente: a API poderia publicar um evento de câmera adicionada e outro serviço consumi-lo. Estudar falhas, tentativas e duplicidade de mensagens, sem presumir que publicar um evento e gravar no banco aconteçam atomicamente.
 
@@ -117,6 +117,6 @@ Swarm seria uma alternativa para experimentar orquestração com uma transição
 
 ## Ponto de partida
 
-A próxima pergunta a explorar é: **quais configurações do Street Eye mudam entre dev e prod, quais são secretas e de onde cada uma chega à aplicação hoje?**
+A próxima pergunta a explorar é: **o que muda quando a API publica um evento de câmera adicionada e um serviço de notificações o processa depois, em vez de a API executar essa tarefa diretamente?**
 
-Esse levantamento vem antes de editar configurações ou contratar infraestrutura. A prioridade continua sendo compreender cada decisão, uma etapa por vez, com o usuário realizando as configurações e experiências.
+O ponto de partida é compreender produtor, consumidor e o papel do intermediário de mensagens, relacionando esses conceitos ao que o usuário já encontra no trabalho. A prioridade continua sendo compreender cada decisão, uma etapa por vez, com o usuário realizando as configurações e experiências.

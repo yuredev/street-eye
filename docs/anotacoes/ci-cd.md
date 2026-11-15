@@ -2,7 +2,7 @@
 
 Data das anotações: **14/11/2026**.
 
-Registro da conversa inicial sobre integração contínua, GitHub Actions e Jenkins. O foco desta conversa foi CI; CD ainda não foi aprofundado. Os exemplos abaixo são possibilidades para o Street Eye, não configurações implementadas.
+Registro das conversas sobre integração contínua, GitHub Actions e Jenkins. O foco foi CI; CD ainda não foi aprofundado. A primeira parte reúne conceitos e possibilidades; a seção de configuração registra o workflow criado pelo usuário no Street Eye.
 
 ## Integração contínua (CI)
 
@@ -85,6 +85,148 @@ Nesse aspecto, GitHub Actions se parece mais com Firebase: a plataforma já est�
 
 ## Aplicação ao Street Eye
 
-Uma possibilidade inicial de estudo é verificar a compilação e os testes da API em PRs com GitHub Actions. Isso ainda precisa ser discutido e configurado pelo usuário, uma etapa por vez.
+O usuário criou `.github/workflows/ci-api.yml` para compilar e executar os testes da API em PRs destinados à `main`. O workflow não configura deploy.
 
-Estas anotações não definem uma pipeline, não configuram deploy e não tornam as possibilidades discutidas tarefas automaticamente autorizadas.
+## Estrutura do workflow no GitHub Actions
+
+O GitHub reconhece arquivos YAML em `.github/workflows/`. O nome `ci-api.yml` é uma escolha do projeto.
+
+```text
+Workflow: CI da API
+└── Job: testar-api
+    ├── Step: buscar o código
+    ├── Step: preparar Java 17
+    └── Step: executar os testes
+```
+
+- **Workflow:** processo automatizado definido no arquivo.
+- **Job:** grupo de etapas que compartilham um executor e seu ambiente de trabalho.
+- **Step:** etapa que executa um comando ou uma action.
+- **Runner:** máquina ou ambiente executor do job.
+
+Isso já constitui uma pipeline de CI. Um workflow pode ter vários jobs, por exemplo, um para a API e outro para o frontend. Por padrão, jobs independentes podem executar em paralelo; os steps usados neste job executam em sequência.
+
+## Gatilho e branch de destino
+
+```yaml
+on:
+  pull_request:
+    branches:
+      - main
+```
+
+`on` define o gatilho. Por padrão, `pull_request` executa quando um PR é aberto, reaberto ou recebe novos commits. O filtro `branches` se refere à branch de destino: neste caso, PRs que querem integrar código na `main`, independentemente da branch de origem.
+
+Esse filtro vale para o workflow inteiro. Um push isolado para a `main`, sem evento de PR, não dispara esse gatilho.
+
+O arquivo precisa estar commitado e enviado ao GitHub na branch do PR. Os resultados ficam disponíveis nos checks do PR e na aba Actions, onde é possível abrir os logs de cada etapa.
+
+## Escolha da máquina
+
+```yaml
+runs-on: ubuntu-latest
+```
+
+Escolhe um executor Ubuntu fornecido pelo GitHub. Também existem opções como `windows-latest` e `macos-latest`. A máquina da CI não precisa usar o mesmo sistema operacional do computador do desenvolvedor.
+
+## Actions prontas e comandos
+
+`uses` referencia uma action reutilizável, que pode ser mantida pelo GitHub, pela comunidade, por uma empresa ou pelo próprio usuário. `run` executa um comando escrito no workflow.
+
+### Buscar o código
+
+```yaml
+- name: Buscar código do repositório
+  uses: actions/checkout@v4
+```
+
+A máquina do job não recebe automaticamente os arquivos do projeto. A checkout os coloca na pasta de trabalho para as próximas etapas.
+
+Simplificando, ela identifica a referência a verificar, busca os dados com Git e faz o checkout dessa versão. Por padrão, busca apenas um commit, em vez de todo o histórico. No evento `pull_request`, a referência padrão normalmente corresponde ao resultado de uma combinação de teste entre a branch do PR e a de destino.
+
+A checkout prepara os arquivos; compilar e executar testes são tarefas de outras etapas.
+
+### Preparar o Java
+
+```yaml
+- name: Preparar Java 17
+  uses: actions/setup-java@v6
+  with:
+    distribution: temurin
+    java-version: '17'
+```
+
+`with` fornece parâmetros à action. `temurin` escolhe a distribuição Eclipse Temurin; `'17'` escolhe a versão do Java usada pela API. A action disponibiliza o JDK e configura `JAVA_HOME` e `PATH` para os comandos seguintes.
+
+### Versões das actions
+
+Em `actions/setup-java@v6`, `v6` é a versão principal da action, não do Java. Cada action evolui separadamente da plataforma GitHub Actions.
+
+O arquivo continua referenciando `v6` até ser alterado, mas esse marcador pode receber atualizações dentro da versão principal. Uma nova versão pode trazer funcionalidades, correções e mudanças de configuração.
+
+Na comparação estudada entre setup-java v5 e v6, a v6 acrescentou suporte a distribuições, seleção de Java com `latest`, melhorias de cache e verificações de checksum quando disponíveis. Ambas atendem à configuração básica de Java 17 com Temurin. Isso não exige atualizar a versão do Java do projeto.
+
+## Executar os testes com Maven
+
+Não é necessária uma action específica de testes: o Maven pode ser chamado com `run`.
+
+```yaml
+- name: Executar testes da API
+  working-directory: api
+  run: mvn test
+```
+
+`working-directory` define a pasta de execução. O `pom.xml` em `api` reúne os módulos, e `mvn test` compila o código e executa os testes encontrados nesses módulos. Clicar para executar um teste na IDE pode executar apenas o teste selecionado; aqui o escopo é o conjunto dos módulos.
+
+Se houver falha nos testes, o Maven retorna um código de erro e a etapa fica marcada como falha.
+
+## Etapas após uma falha
+
+Por padrão, uma etapa depende do sucesso das anteriores. Portanto, se `mvn test` falhar, um `echo` colocado depois será pulado.
+
+Para emitir a mensagem final mesmo após falhas, foi usada a condição:
+
+```yaml
+- name: Informar fim
+  if: always()
+  run: echo "Fim da pipeline"
+```
+
+Essa condição não transforma a falha dos testes em sucesso. Ela permite executar a etapa de mensagem apesar do resultado anterior.
+
+## Falha encontrada na primeira execução
+
+O log enviado mostrou que os 10 testes de `AuthenticationControllerTest` passaram. A falha aconteceu em `StreetEyeBackendApplicationTests.contextLoads`, ao carregar o contexto Spring:
+
+```text
+Failed to determine a suitable driver class
+```
+
+A aplicação falhou ao preparar o acesso ao banco, antes de uma tentativa de conexão que resultasse em conexão recusada. No projeto, as configurações do banco são fornecidas pelo Compose. Executar `mvn test` diretamente no runner não inicia o Compose nem importa suas configurações automaticamente.
+
+## Por que precisou de banco se os testes usam mocks?
+
+Os mocks de `AuthenticationControllerTest` pertencem àquele teste. Eles não são compartilhados automaticamente com outras classes de teste.
+
+Já o teste abaixo usava `@SpringBootTest`:
+
+```java
+@SpringBootTest
+class StreetEyeBackendApplicationTests {
+    @Test
+    void contextLoads() {
+    }
+}
+```
+
+Mesmo com o método vazio, o Spring tenta carregar o contexto antes de executá-lo. Isso inclui criar componentes, resolver suas dependências e configurar JPA e Liquibase, que dependem do banco.
+
+Esse tipo de teste costuma acompanhar projetos gerados pelo Spring Initializr. Ele verifica se o contexto consegue iniciar, mas não verifica diretamente comportamentos como autenticar um usuário.
+
+## Decisão sobre o contextLoads
+
+O usuário removeu `api/aplicacao/src/test/java/yuredev/street_eye_backend/StreetEyeBackendApplicationTests.java` para manter o foco inicial nos testes com mocks e no aprendizado de CI.
+
+Remover um arquivo de `src/test` não altera o funcionamento da aplicação, mas elimina essa verificação de inicialização. O teste tem valor quando existe um ambiente de testes preparado com as configurações e os serviços necessários.
+
+Retomar essa verificação ao estudar testes de integração com banco é uma possibilidade futura, não uma tarefa automaticamente autorizada. A falha original foi diagnosticada; estas anotações não confirmam o resultado de uma execução posterior à remoção.

@@ -15,22 +15,33 @@ A CI atual cobre a API; compilar e testar o frontend continua sendo uma extensã
 
 ## Ordem sugerida
 
-**Mensageria é o próximo estudo**, por escolha do usuário, que já utiliza essa tecnologia no trabalho. Os experimentos podem acontecer localmente, sem depender de CD. Depois vêm ambientes e segredos, antes do primeiro deploy; primeiro se aprende a publicar manualmente e depois se automatiza esse processo.
+**Mensageria é o próximo estudo**, por escolha do usuário, que já utiliza essa tecnologia no trabalho. Os experimentos podem acontecer localmente, sem depender de CD. Depois da base de mensagens e falhas entre serviços, entra Saga orquestrada. Em seguida vêm ambientes e segredos, antes do primeiro deploy; primeiro se aprende a publicar manualmente e depois se automatiza esse processo.
 
 | Ordem | Estudo | Situação e aplicação no Street Eye |
 |---|---|---|
 | 1 | **Aplicação multimódulo** | Já estudado e aplicado na organização da API. |
 | 2 | **CI com GitHub Actions** | Já estudado e aplicado aos testes da API em PRs para `main`. |
 | 3 | **Mensageria e um segundo serviço** | Próximo estudo: experimentar localmente notificações a partir de eventos de câmeras adicionadas, relacionando os conceitos ao uso no trabalho. |
-| 4 | **Ambientes dev/prod e segredos** | Separar configurações, dados, credenciais e recursos dos ambientes; definir o que pode ir para o Git. |
-| 5 | **Primeiro deploy manual e segurança de exposição** | Publicar uma versão em ambiente de estudo, entender HTTPS, portas, acesso ao banco e persistência. Antes de usar dados reais, resolver as permissões de vídeo. |
-| 6 | **CD com GitHub Actions** | Automatizar build, publicação de imagens e atualização do ambiente, com segredos de deploy e possibilidade de voltar à versão anterior. |
-| 7 | **OAuth2 e OpenID Connect** | Aprender login com provedor de identidade e proteção da API, aproveitando a base de ambientes, URLs e segredos. |
-| 8 | **Kubernetes ou Swarm** | Estudar orquestração depois de dominar a execução e o deploy dos serviços com Compose. |
+| 4 | **Saga orquestrada** | Após a base de mensageria, experimentar um coordenador de transações locais entre serviços, com estado persistido, falhas e compensações. |
+| 5 | **Ambientes dev/prod e segredos** | Separar configurações, dados, credenciais e recursos dos ambientes; definir o que pode ir para o Git. |
+| 6 | **Primeiro deploy manual e segurança de exposição** | Publicar uma versão em ambiente de estudo, entender HTTPS, portas, acesso ao banco e persistência. Antes de usar dados reais, resolver as permissões de vídeo. |
+| 7 | **CD com GitHub Actions** | Automatizar build, publicação de imagens e atualização do ambiente, com segredos de deploy e possibilidade de voltar à versão anterior. |
+| 8 | **OAuth2 e OpenID Connect** | Aprender login com provedor de identidade e proteção da API, aproveitando a base de ambientes, URLs e segredos. |
+| 9 | **Kubernetes ou Swarm** | Estudar orquestração depois de dominar a execução e o deploy dos serviços com Compose. |
 
 Essa ordem é uma sugestão de aprendizado, não uma dependência técnica rígida. O primeiro experimento de OAuth2 pode ser local e não exige concluir CD; ele aparece nessa posição para aproveitar a compreensão de callbacks, HTTPS e credenciais por ambiente.
 
-## Depois da mensageria: separar dev e prod
+## Após a base de mensageria: Saga orquestrada
+
+Uma Saga coordena uma operação de negócio composta por transações locais em serviços diferentes. Na variante orquestrada, um coordenador acompanha o estado, solicita as próximas etapas e decide quando executar compensações. Não é um rollback automático entre bancos: compensações são ações de negócio e também podem falhar. [Padrão Saga](https://microservices.io/patterns/data/saga.html)
+
+Estudar depois de compreender produtor, consumidor, duplicidade e falhas de mensagens. Uma notificação simples de câmera adicionada não exige Saga.
+
+Como experimento futuro, simular a ativação de uma câmera: registrar cadastro pendente, reservar um recurso em um serviço de streaming fictício e confirmar a ativação. Se a confirmação falhar após a reserva, o coordenador solicita sua liberação e marca o cadastro como falho. Isso pressupõe serviços com transações próprias; não requer câmeras físicas nem transforma os módulos atuais automaticamente em microsserviços.
+
+Aprender estado persistido e correlação da Saga, idempotência, timeout, tentativas e retomada após reinício. Testar sucesso, mensagens duplicadas, falha intermediária e falha na compensação. Comparar com coreografia, sem coordenador central. Orquestrar esse fluxo de negócio é diferente de orquestrar containers com Kubernetes.
+
+## Depois da mensageria e Saga: separar dev e prod
 
 Vamos considerar apenas **dev** e **prod**, sem homologação. Ambiente não é sinônimo de branch: uma branch pode gerar um artefato, enquanto o ambiente define onde e com quais configurações ele executa.
 

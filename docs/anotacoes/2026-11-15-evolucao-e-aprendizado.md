@@ -15,17 +15,17 @@ A CI atual cobre a API; compilar e testar o frontend continua sendo uma extensã
 
 ## Ordem sugerida
 
-**Mensageria é o próximo estudo**, por escolha do usuário, que já utiliza essa tecnologia no trabalho. Os experimentos podem acontecer localmente, sem depender de CD. Depois da base de mensagens e falhas entre serviços, entra Saga orquestrada. Em seguida vêm ambientes e segredos, antes do primeiro deploy; primeiro se aprende a publicar manualmente e depois se automatiza esse processo.
+**Ambientes dev/prod e segredos são o próximo estudo**, seguidos pelo primeiro deploy manual e segurança de exposição. Primeiro se aprende a publicar manualmente e depois se automatiza esse processo. Mensageria e Saga continuam como estudos futuros; Saga vem depois da base de mensagens e falhas entre serviços.
 
 | Ordem | Estudo | Situação e aplicação no Street Eye |
 |---|---|---|
 | 1 | **Aplicação multimódulo** | Já estudado e aplicado na organização da API. |
 | 2 | **CI com GitHub Actions** | Já estudado e aplicado aos testes da API em PRs para `main`. |
-| 3 | **Mensageria e um segundo serviço** | Próximo estudo: experimentar localmente notificações a partir de eventos de câmeras adicionadas, relacionando os conceitos ao uso no trabalho. |
-| 4 | **Saga orquestrada** | Após a base de mensageria, experimentar um coordenador de transações locais entre serviços, com estado persistido, falhas e compensações. |
-| 5 | **Ambientes dev/prod e segredos** | Separar configurações, dados, credenciais e recursos dos ambientes; definir o que pode ir para o Git. |
-| 6 | **Primeiro deploy manual e segurança de exposição** | Publicar uma versão em ambiente de estudo, entender HTTPS, portas, acesso ao banco e persistência. Antes de usar dados reais, resolver as permissões de vídeo. |
-| 7 | **CD com GitHub Actions** | Automatizar build, publicação de imagens e atualização do ambiente, com segredos de deploy e possibilidade de voltar à versão anterior. |
+| 3 | **Ambientes dev/prod e segredos** | Próximo estudo: separar configurações, dados, credenciais e recursos dos ambientes; definir o que pode ir para o Git. |
+| 4 | **Primeiro deploy manual e segurança de exposição** | Publicar uma versão em ambiente de estudo, entender HTTPS, portas, acesso ao banco e persistência. Antes de usar dados reais, resolver as permissões de vídeo. |
+| 5 | **CD com GitHub Actions** | Automatizar build, publicação de imagens e atualização do ambiente, com segredos de deploy e possibilidade de voltar à versão anterior. |
+| 6 | **Mensageria e um segundo serviço** | Experimentar localmente notificações a partir de eventos de câmeras adicionadas, relacionando os conceitos ao uso no trabalho. |
+| 7 | **Saga orquestrada** | Após a base de mensageria, experimentar um coordenador de transações locais entre serviços, com estado persistido, falhas e compensações. |
 | 8 | **OAuth2 e OpenID Connect** | Aprender login com provedor de identidade e proteção da API, aproveitando a base de ambientes, URLs e segredos. |
 | 9 | **Kubernetes ou Swarm** | Estudar orquestração depois de dominar a execução e o deploy dos serviços com Compose. |
 
@@ -41,7 +41,7 @@ Como experimento futuro, simular a ativação de uma câmera: registrar cadastro
 
 Aprender estado persistido e correlação da Saga, idempotência, timeout, tentativas e retomada após reinício. Testar sucesso, mensagens duplicadas, falha intermediária e falha na compensação. Comparar com coreografia, sem coordenador central. Orquestrar esse fluxo de negócio é diferente de orquestrar containers com Kubernetes.
 
-## Depois da mensageria e Saga: separar dev e prod
+## Próximo estudo: separar dev e prod
 
 Vamos considerar apenas **dev** e **prod**, sem homologação. Ambiente não é sinônimo de branch: uma branch pode gerar um artefato, enquanto o ambiente define onde e com quais configurações ele executa.
 
@@ -116,7 +116,7 @@ As referências explicam os conceitos; ao implementar, conferir a documentação
 
 Multimódulo e microsserviços são coisas diferentes. Um projeto Maven pode ter vários módulos e gerar uma única aplicação. Microsserviços são aplicações executadas e implantadas independentemente.
 
-A organização interna já foi explorada. O próximo estudo usa um fluxo concreto de mensageria para experimentar a comunicação entre serviços localmente. O deploy desses serviços será estudado depois.
+A organização interna já foi explorada. Um estudo futuro pode usar um fluxo concreto de mensageria para experimentar a comunicação entre serviços localmente.
 
 No Street Eye, uma separação que merece investigação é entre cadastros de comunidades/câmeras e processamento de vídeo. As notificações continuam sendo uma boa primeira aplicação independente: a API poderia publicar um evento de câmera adicionada e outro serviço consumi-lo. Estudar falhas, tentativas e duplicidade de mensagens, sem presumir que publicar um evento e gravar no banco aconteçam atomicamente.
 
@@ -128,6 +128,6 @@ Swarm seria uma alternativa para experimentar orquestração com uma transição
 
 ## Ponto de partida
 
-A próxima pergunta a explorar é: **o que muda quando a API publica um evento de câmera adicionada e um serviço de notificações o processa depois, em vez de a API executar essa tarefa diretamente?**
+A próxima pergunta a explorar é: **o que distingue o ambiente de desenvolvimento do ambiente de produção no Street Eye?**
 
-O ponto de partida é compreender produtor, consumidor e o papel do intermediário de mensagens, relacionando esses conceitos ao que o usuário já encontra no trabalho. A prioridade continua sendo compreender cada decisão, uma etapa por vez, com o usuário realizando as configurações e experiências.
+O ponto de partida é reconhecer as configurações e os recursos usados pela aplicação local e identificar quais precisariam ser diferentes em produção. A prioridade continua sendo compreender cada decisão, uma etapa por vez, com o usuário realizando as configurações e experiências.

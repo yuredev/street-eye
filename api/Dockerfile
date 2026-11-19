@@ -10,7 +10,7 @@ COPY ["video", "./video"]
 
 COPY ["pom.xml", "./pom.xml"]
 
-COPY ["application-local.yaml", "application.yaml", "./"]
+COPY ["application-local.yaml", "application-dev.yaml", "application.yaml", "./"]
 
 RUN mvn -DskipTests package
 
